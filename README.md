@@ -1,5 +1,7 @@
 # iview-design
 
+>> vue2 + iview 框架模板
+
 ## Project setup
 ```
 npm install
