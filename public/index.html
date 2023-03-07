@@ -7,7 +7,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <title><%= htmlWebpackPlugin.options.title %></title>
-  <script src="./static/index.js"></script>
+  <!-- 也推荐 直接引入,数据改变时会重新发起请求code从304更新为200 -->
+  <!-- <script src="./static/index.js"></script> -->
+  <!-- 页面刷新时更新数据  + Math.random()请求防止页面缓存出现304(304 是对客户端有缓存情况下服务端的一种响应。) -->
+  <script type="text/javascript">
+    document.write(`<script type='text/javascript' src='./static/index.js?random=${Math.random()}'></${'s'}cript>`)
+  </script>
 </head>
 
 <body>
