@@ -1,1 +1,0 @@
-var $BaseUrl = "/manage" // 用于请求的前缀

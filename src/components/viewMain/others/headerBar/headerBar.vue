@@ -64,13 +64,14 @@ export default {
 
     .breadcrumb {
       margin-left: 20px;
-      font-weight: 600;
-      font-size: 16px;
+      font-weight: 700;
+      font-size: 18px;
     }
   }
   .user {
     margin-right: 20px;
     transform: translateY(-1px);
+    z-index: 999;
   }
 }
 </style>
