@@ -1,11 +1,22 @@
 <template>
   <section class="headerbar">
     <section class="left">
-      <div class="coll" @click="$emit('on-coll-change')">
-        <Icon type="md-menu" size="26" class="sider-trigger-a" />
+      <div
+        class="coll"
+        @click="
+          $emit('on-coll-change');
+          isShow = !isShow;
+        "
+      >
+        <Icon
+          class="sider-trigger"
+          :class="{ 'is-show': isShow }"
+          type="md-menu"
+          size="26"
+        />
       </div>
       <div class="breadcrumb">
-        <BreadcrumbItem to="">主页</BreadcrumbItem>
+        <BreadcrumbItem to="">{{ headerTitle }}</BreadcrumbItem>
       </div>
     </section>
     <div class="user">
@@ -15,20 +26,40 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    headerTitle: String,
+  },
+
+  data() {
+    return {
+      isShow: false,
+    };
+  },
+
+  created() {},
+};
 </script>
 
 <style lang="less" scoped>
 .headerbar {
   display: flex;
   justify-content: space-between;
+  align-items: start;
 
   .left {
     display: flex;
 
     .coll {
       cursor: pointer;
-      transform: translateY(2.6px);
+
+      .sider-trigger {
+        transform: translateY(2.6px);
+      }
+
+      .is-show {
+        transform: translateY(2.6px) rotateY(120deg);
+      }
     }
 
     .breadcrumb {
@@ -36,6 +67,10 @@ export default {};
       font-weight: 600;
       font-size: 16px;
     }
+  }
+  .user {
+    margin-right: 20px;
+    transform: translateY(-1px);
   }
 }
 </style>

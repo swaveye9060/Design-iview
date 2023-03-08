@@ -13,17 +13,25 @@
       class="left-sider"
       :style="{ overflow: 'hidden' }"
     >
-      <sideMenu :collapsed="collapsed"></sideMenu>
+      <sideMenu
+        :collapsed="collapsed"
+        @on-select-title="headerTitle = $event"
+      ></sideMenu>
     </Sider>
     <Layout>
       <Header class="header-con">
-        <headerBar @on-coll-change="collapsed = !collapsed">
+        <headerBar
+          @on-coll-change="collapsed = !collapsed"
+          :headerTitle="headerTitle"
+        >
           <user :userAvator="userAvator" />
         </headerBar>
       </Header>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
-          <router-view></router-view>
+          <Content class="content-wrapper">
+            <router-view></router-view>
+          </Content>
         </Layout>
       </Content>
     </Layout>
@@ -31,8 +39,6 @@
 </template>
 
 <script>
-import menuList from "@/mock/data/index";
-console.log(menuList, 333);
 export default {
   components: {
     user: () => import("./others/user/user.vue"),
@@ -41,35 +47,26 @@ export default {
   },
   data() {
     return {
-      menuList: menuList,
+      // 展开/收起
       collapsed: false,
-      // minLogo,
-      // maxLogo,
-      // isFullscreen: false,
-
-      // menuList: [],
-      // theme: "dark",
-      // rootIconSize: 20,
-      // iconSize: 16,
-      // accordion: true,
-      // activeName: "",
-      // openNames: [],
-
-      // openedNames: [],
       // user
       num: "02",
       userAvator: "",
+      headerTitle: "",
     };
   },
 
   created() {
     this.userAvator = require(`../../assets/images/user/${this.num}.jpg`);
+
+    // 获取title
+    this.headerTitle = (
+      JSON.parse(localStorage.getItem("menu"))
+        ? JSON.parse(localStorage.getItem("menu")).activeName
+        : "home&主页"
+    ).split("&")[1];
   },
 
-  methods: {
-    handleSelect() {
-      // this.$emit("on-select", name);
-    },
-  },
+  methods: {},
 };
 </script>

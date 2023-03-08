@@ -1,17 +1,21 @@
 <template>
   <section class="side-menu">
     <Menu
+      ref="menu"
       v-show="!collapsed"
-      :open-names="openNames"
-      :active-name="activeName"
+      :open-names="menu.openNames"
+      :active-name="menu.activeName"
       theme="dark"
       width="auto"
       accordion
+      @on-select="handleSelect"
+      @on-open-change="handleOpenChang"
     >
+      <!-- 展开 -->
       <template v-for="item in menuList">
         <Submenu
           v-if="item.children && item.children.length > 0"
-          :name="item.name"
+          :name="`${item.name}&${item.title}`"
           :key="`menu-${item.name}`"
         >
           <template slot="title">
@@ -21,7 +25,7 @@
           <template v-for="item2 in item.children">
             <Submenu
               v-if="item2.children && item2.children.length > 0"
-              :name="item2.name"
+              :name="`${item2.name}&${item2.title}`"
               :key="item2.name + 'item2'"
             >
               <template slot="title">
@@ -31,24 +35,38 @@
               <MenuItem
                 v-for="item3 in item2.children"
                 :key="item3.name + 'item3'"
-                :name="item3.name"
-                >{{ item3.title }}</MenuItem
+                :name="`${item3.name}&${item3.title}`"
               >
+                {{ item3.title }}
+              </MenuItem>
             </Submenu>
-            <MenuItem v-else :key="item2.name + 'item2'" :name="item2.name">{{
-              item2.title
-            }}</MenuItem>
+            <MenuItem
+              v-else
+              :key="item2.name + 'item2'"
+              :name="`${item2.name}&${item2.title}`"
+              >{{ item2.title }}</MenuItem
+            >
           </template>
         </Submenu>
-        <MenuItem v-else :name="0" :key="`menu-${item.name}`">
+        <MenuItem
+          v-else
+          :name="`${item.name}&${item.title}`"
+          :key="`menu-${item.name}`"
+        >
           <Icon :type="item.icon"></Icon>
           <span>{{ item.title }}</span>
         </MenuItem>
       </template>
     </Menu>
+    <!-- 收起 -->
     <section class="dropdownbox" v-show="collapsed">
       <div v-for="item in menuList" :key="item.name + 'Dropdown'">
-        <Dropdown trigger="hover" placement="right-start" transfer>
+        <Dropdown
+          trigger="hover"
+          placement="right-start"
+          transfer
+          @on-click="handleSelect"
+        >
           <a href="javascript:void(0)">
             <Icon :type="item.icon" :size="20" color="#fff"></Icon>
           </a>
@@ -69,17 +87,24 @@
                     <DropdownItem
                       v-for="item3 in item2.children"
                       :key="item3.name + 'DropdownMenu'"
+                      :name="`${item3.name}&${item3.title}`"
                     >
                       {{ item3.title }}
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
-                <DropdownItem v-else :key="item2.name + 'Dropdown'">
+                <DropdownItem
+                  v-else
+                  :key="item2.name + 'Dropdown'"
+                  :name="`${item2.name}&${item2.title}`"
+                >
                   {{ item2.title }}
                 </DropdownItem>
               </template>
             </template>
-            <DropdownItem v-else>{{ item.title }}</DropdownItem>
+            <DropdownItem v-else :name="`${item.name}&${item.title}`">{{
+              item.title
+            }}</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -88,6 +113,8 @@
 </template>
 
 <script>
+import menuList from "@/mock/menuData/index";
+
 export default {
   props: {
     collapsed: {
@@ -96,76 +123,47 @@ export default {
   },
   data() {
     return {
-      openNames: ["test", "test-3"],
-      activeName: "test-1",
-      //
-      menuList: [
-        {
-          name: "home",
-          icon: "ios-navigate",
-          title: "主页",
-          children: [],
-        },
-        {
-          name: "test",
-          icon: "ios-keypad",
-          title: "测试菜单 1",
-          children: [
-            {
-              name: "test-1",
-              icon: "ios-navigate",
-              title: "子菜单 1",
-              children: [],
-            },
-            {
-              name: "test-2",
-              icon: "ios-navigate",
-              title: "子菜单 2",
-              children: [
-                {
-                  name: "test-2-1",
-                  icon: "ios-navigate",
-                  title: "多层子菜单 1",
-                  children: [],
-                },
-              ],
-            },
-            {
-              name: "test-3",
-              icon: "ios-navigate",
-              title: "子菜单 3",
-              children: [],
-            },
-          ],
-        },
-        {
-          name: "test02",
-          icon: "ios-analytics",
-          title: "测试菜单 2",
-          children: [
-            {
-              name: "test02-1",
-              icon: "ios-analytics",
-              title: "子菜单 1",
-              children: [],
-            },
-            {
-              name: "test02-2",
-              icon: "ios-analytics",
-              title: "子菜单 2",
-              children: [],
-            },
-          ],
-        },
-      ],
+      menu: {
+        openNames: JSON.parse(localStorage.getItem("menu"))
+          ? JSON.parse(localStorage.getItem("menu")).openNames
+          : ["home&主页"],
+        activeName: JSON.parse(localStorage.getItem("menu"))
+          ? JSON.parse(localStorage.getItem("menu")).activeName
+          : "home&主页",
+      },
+      // 菜单数据
+      menuList: menuList,
     };
+  },
+
+  methods: {
+    handleOpenChang(openNames) {
+      // console.log(openNames, 111);
+      this.menu.openNames = openNames;
+    },
+
+    handleSelect(name) {
+      if (!name) return;
+      // console.log(name, 33);
+      let headerTitle = name.split("&")[1];
+      this.$emit("on-select-title", headerTitle);
+      //
+      if (name === "home&主页") this.menu.openNames = ["home&主页"];
+      this.menu.activeName = name;
+      localStorage.setItem("menu", JSON.stringify(this.menu));
+    },
   },
 };
 </script>
 
 <style lang="less">
+@Sider-bg: #001529; // 侧边栏背景色
+@SiderMenu-bg: #000c17; // 子菜单背景色
+@SiderMenu-active-bg: #2d8cf0; // 子菜单背景色
+
 .ivu-select-dropdown.ivu-dropdown-transfer {
   overflow: initial;
+  left: 64px !important;
 }
 
 .side-menu {
@@ -174,6 +172,30 @@ export default {
 
     .ivu-dropdown {
       padding: 6px 20px;
+    }
+  }
+
+  // 单个菜单
+  .ivu-menu-item:hover {
+    background-color: @Sider-bg !important;
+  }
+
+  .ivu-menu-item.ivu-menu-item-active {
+    /* 选中状态UI-1 (默认) */
+    background-color: @SiderMenu-bg !important;
+
+    /* 选中状态UI-2 (与子菜单一致) */
+    // color: #fff !important;
+    // background-color: @SiderMenu-active-bg !important;
+  }
+
+  // 多层菜单
+  .ivu-menu-dark,
+  .ivu-menu-submenu-title {
+    background-color: @Sider-bg !important;
+
+    .ivu-menu {
+      background-color: @SiderMenu-bg !important;
     }
   }
 }
