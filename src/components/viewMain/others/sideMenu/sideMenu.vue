@@ -1,5 +1,6 @@
 <template>
   <section class="side-menu">
+    <slot></slot>
     <Menu
       ref="menu"
       v-show="!collapsed"
@@ -136,6 +137,11 @@ export default {
     };
   },
 
+  created() {
+    if (this.menu.activeName === "home&主页")
+      this.menu.openNames = ["home&主页"];
+  },
+
   methods: {
     handleOpenChang(openNames) {
       // console.log(openNames, 111);
@@ -148,7 +154,6 @@ export default {
       let headerTitle = name.split("&")[1];
       this.$emit("on-select-title", headerTitle);
       //
-      if (name === "home&主页") this.menu.openNames = ["home&主页"];
       this.menu.activeName = name;
       localStorage.setItem("menu", JSON.stringify(this.menu));
     },
@@ -175,27 +180,33 @@ export default {
     }
   }
 
-  // 单个菜单
-  .ivu-menu-item:hover {
+  // 菜单
+  .ivu-menu-dark {
     background-color: @Sider-bg !important;
-  }
-
-  .ivu-menu-item.ivu-menu-item-active {
-    /* 选中状态UI-1 (默认) */
-    background-color: @SiderMenu-bg !important;
-
-    /* 选中状态UI-2 (与子菜单一致) */
-    // color: #fff !important;
-    // background-color: @SiderMenu-active-bg !important;
-  }
-
-  // 多层菜单
-  .ivu-menu-dark,
-  .ivu-menu-submenu-title {
-    background-color: @Sider-bg !important;
-
-    .ivu-menu {
+    // 单个菜单
+    .ivu-menu-item:hover {
+      background-color: @Sider-bg !important;
+    }
+    .ivu-menu-item-selected {
       background-color: @SiderMenu-bg !important;
+    }
+
+    // 多层菜单
+    .ivu-menu-submenu {
+      background-color: @Sider-bg !important;
+      &.ivu-menu-opened {
+        .ivu-menu-submenu-title {
+          background-color: @Sider-bg !important;
+        }
+
+        .ivu-menu,
+        .ivu-menu .ivu-menu-submenu-title {
+          background-color: @SiderMenu-bg !important;
+        }
+      }
+      .ivu-menu-submenu-title:hover {
+        background-color: @Sider-bg !important;
+      }
     }
   }
 }

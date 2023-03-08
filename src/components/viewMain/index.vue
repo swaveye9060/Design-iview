@@ -13,10 +13,17 @@
       class="left-sider"
       :style="{ overflow: 'hidden' }"
     >
-      <sideMenu
-        :collapsed="collapsed"
-        @on-select-title="headerTitle = $event"
-      ></sideMenu>
+      <sideMenu :collapsed="collapsed" @on-select-title="headerTitle = $event">
+        <div class="logo-con">
+          <div class="logo-box" v-show="!collapsed" key="max-logo">
+            <img :src="maxLogo" />
+            <span>{{ SystemName }}</span>
+          </div>
+          <div class="logo-box">
+            <img v-show="collapsed" :src="minLogo" key="min-logo" />
+          </div>
+        </div>
+      </sideMenu>
     </Sider>
     <Layout>
       <Header class="header-con">
@@ -53,6 +60,9 @@ export default {
       num: "02",
       userAvator: "",
       headerTitle: "",
+
+      maxLogo: require("../../assets/images/logo/01.png"),
+      minLogo: require("../../assets/images/logo/01.png"),
     };
   },
 
