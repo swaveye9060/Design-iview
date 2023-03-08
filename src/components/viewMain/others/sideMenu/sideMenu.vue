@@ -37,6 +37,7 @@
                 v-for="item3 in item2.children"
                 :key="item3.name + 'item3'"
                 :name="`${item3.name}&${item3.title}`"
+                :to="item3.path"
               >
                 {{ item3.title }}
               </MenuItem>
@@ -45,14 +46,17 @@
               v-else
               :key="item2.name + 'item2'"
               :name="`${item2.name}&${item2.title}`"
-              >{{ item2.title }}</MenuItem
+              :to="item2.path"
             >
+              {{ item2.title }}
+            </MenuItem>
           </template>
         </Submenu>
         <MenuItem
           v-else
           :name="`${item.name}&${item.title}`"
           :key="`menu-${item.name}`"
+          :to="item.path"
         >
           <Icon :type="item.icon"></Icon>
           <span>{{ item.title }}</span>
@@ -81,8 +85,10 @@
                   placement="right-start"
                 >
                   <DropdownItem>
-                    {{ item2.title }}
-                    <Icon type="ios-arrow-forward"></Icon>
+                    <div class="DropdownItem-2">
+                      {{ item2.title }}
+                      <Icon type="ios-arrow-forward"></Icon>
+                    </div>
                   </DropdownItem>
                   <DropdownMenu slot="list">
                     <DropdownItem
@@ -90,7 +96,9 @@
                       :key="item3.name + 'DropdownMenu'"
                       :name="`${item3.name}&${item3.title}`"
                     >
-                      {{ item3.title }}
+                      <router-link :to="item3.path">
+                        {{ item3.title }}
+                      </router-link>
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
@@ -99,13 +107,13 @@
                   :key="item2.name + 'Dropdown'"
                   :name="`${item2.name}&${item2.title}`"
                 >
-                  {{ item2.title }}
+                  <router-link :to="item2.path">{{ item2.title }}</router-link>
                 </DropdownItem>
               </template>
             </template>
-            <DropdownItem v-else :name="`${item.name}&${item.title}`">{{
-              item.title
-            }}</DropdownItem>
+            <DropdownItem v-else :name="`${item.name}&${item.title}`">
+              <router-link :to="item.path">{{ item.title }}</router-link>
+            </DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -170,6 +178,24 @@ export default {
   overflow: initial;
   left: 64px !important;
 }
+.ivu-dropdown-menu {
+  .ivu-dropdown-item {
+    padding: 0;
+    a {
+      display: inline-block;
+      width: 100%;
+      padding: 7px 16px;
+      color: #515a6e !important;
+    }
+  }
+
+  .ivu-dropdown {
+    .DropdownItem-2 {
+      width: 100%;
+      padding: 7px 16px;
+    }
+  }
+}
 
 .side-menu {
   .dropdownbox {
@@ -183,11 +209,13 @@ export default {
   // 菜单
   .ivu-menu-dark {
     background-color: @Sider-bg !important;
+
     // 单个菜单
     .ivu-menu-item:hover {
       background-color: @Sider-bg !important;
     }
-    .ivu-menu-item-selected {
+    .ivu-menu-item-selected,
+    .ivu-menu-item-selected:hover {
       background-color: @SiderMenu-bg !important;
     }
 
