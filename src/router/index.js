@@ -4,7 +4,34 @@ Vue.use(VueRouter)
 import ViewUI from 'view-design';
 Vue.use(ViewUI);
 
+
+import menuList from '../mock/menuData/index';
+const mainComponent = []
+
+/* 获取菜单 */
+function getMenuList(array) {
+  array.forEach(element => {
+    // 通过路径过滤组件
+    if (element.path) {
+      // console.log(component, 333);
+      mainComponent.push({
+        path: element.path,
+        name: element.name,
+        component: () => import(`@/${element.component}.vue`),
+      })
+    }
+    if (element.children && element.children.length > 0) {
+      getMenuList(element.children)
+    }
+  });
+}
+
+getMenuList(menuList)
+
+// 登录页
 import Login from '../views/login/login.vue'
+
+
 
 const routes = [{
     path: '/',
@@ -19,13 +46,17 @@ const routes = [{
     path: '/main',
     name: 'main',
     component: () => import('../components/viewMain/index'),
-    children: [{
-      path: '/home',
-      name: 'home',
-      component: () => import('../views/home/index.vue')
-    }, ]
+    children: [
+      // {
+      //   path: '/home',
+      //   name: 'home',
+      //   component: () => import('@/views/home/index.vue')
+      // },
+      ...mainComponent,
+    ]
   },
 ]
+
 
 const router = new VueRouter({
   routes
