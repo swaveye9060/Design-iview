@@ -52,7 +52,21 @@
             </MenuItem>
           </template>
         </Submenu>
-        <MenuItem
+        <Submenu
+          v-else
+          :key="`menu-${item.name}`"
+          :name="`${item.name}&${item.title}`"
+          class="xxx"
+        >
+          <template slot="title">
+            <router-link class="yyy" @click="xxx" :to="item.path">
+              <Icon :type="item.icon"></Icon>
+              {{ item.title }}
+            </router-link>
+          </template>
+          <MenuItem :name="`${item.name}&${item.title}`"></MenuItem>
+        </Submenu>
+        <!-- <MenuItem
           v-else
           :name="`${item.name}&${item.title}`"
           :key="`menu-${item.name}`"
@@ -60,7 +74,7 @@
         >
           <Icon :type="item.icon"></Icon>
           <span>{{ item.title }}</span>
-        </MenuItem>
+        </MenuItem> -->
       </template>
     </Menu>
     <!-- 收起 -->
@@ -153,11 +167,12 @@ export default {
 
   methods: {
     handleOpenChang(openNames) {
-      // console.log(openNames, 111);
+      console.log(openNames, 111);
       this.menu.openNames = openNames;
     },
 
     handleSelect(name) {
+      console.log(name, 33);
       if (!name) return;
       // console.log(name, 33);
       let headerTitle = name.split("&")[1];
@@ -165,6 +180,10 @@ export default {
       //
       this.menu.activeName = name;
       localStorage.setItem("menu", JSON.stringify(this.menu));
+    },
+
+    xxx() {
+      console.log(333);
     },
   },
 };
@@ -212,6 +231,39 @@ export default {
   // 展开菜单
   .ivu-menu-dark {
     background-color: @Sider-bg !important;
+
+    // 单个菜单-多层转单
+    .xxx {
+      .ivu-menu-submenu-title {
+        // background-color: red;
+        padding: 0;
+        a {
+          color: rgba(255, 255, 255, 0.7);
+          &:hover {
+            color: #fff;
+          }
+        }
+        .yyy {
+          display: block;
+          padding: 14px 24px;
+        }
+        i {
+          margin-right: 8px;
+        }
+        .ivu-icon-ios-arrow-down {
+          display: none;
+        }
+      }
+      &.ivu-menu-opened {
+        a {
+          color: @SiderMenu-active-bg;
+          background-color: @SiderMenu-bg;
+          &:hover {
+            color: @SiderMenu-active-bg;
+          }
+        }
+      }
+    }
 
     // 单个菜单
     .ivu-menu-item:hover {
