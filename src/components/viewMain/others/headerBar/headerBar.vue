@@ -71,6 +71,7 @@ export default {
   .user {
     margin-right: 20px;
     transform: translateY(-1px);
+    z-index: 999;
   }
 }
 </style>
