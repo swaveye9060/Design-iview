@@ -70,6 +70,7 @@
           trigger="hover"
           placement="right-start"
           transfer
+          transfer-class-name="transfer-class-nam-left-open"
           @on-click="handleSelect"
         >
           <a href="javascript:void(0)">
@@ -174,30 +175,32 @@ export default {
 @SiderMenu-bg: #000c17; // 子菜单背景色
 @SiderMenu-active-bg: #2d8cf0; // 子菜单背景色
 
-.ivu-select-dropdown.ivu-dropdown-transfer {
+// 弹出层
+.transfer-class-nam-left-open {
   overflow: initial;
   left: 64px !important;
-}
-.ivu-dropdown-menu {
-  .ivu-dropdown-item {
-    padding: 0;
-    a {
-      display: inline-block;
-      width: 100%;
-      padding: 7px 16px;
-      color: #515a6e !important;
+  .ivu-dropdown-menu {
+    .ivu-dropdown-item {
+      padding: 0;
+      a {
+        display: inline-block;
+        width: 100%;
+        padding: 7px 16px;
+        color: #515a6e !important;
+      }
     }
-  }
 
-  .ivu-dropdown {
-    .DropdownItem-2 {
-      width: 100%;
-      padding: 7px 16px;
+    .ivu-dropdown {
+      .DropdownItem-2 {
+        width: 100%;
+        padding: 7px 16px;
+      }
     }
   }
 }
 
 .side-menu {
+  // 收起菜单-图标
   .dropdownbox {
     text-align: center;
 
@@ -206,7 +209,7 @@ export default {
     }
   }
 
-  // 菜单
+  // 展开菜单
   .ivu-menu-dark {
     background-color: @Sider-bg !important;
 
