@@ -1,6 +1,6 @@
 <template>
   <div class="user-avator-dropdown">
-    <Dropdown @on-click="handleClick">
+    <Dropdown @on-click="handleClick" transfer>
       <Avatar :src="userAvator" />
       <Icon :size="18" type="md-arrow-dropdown"></Icon>
       <DropdownMenu slot="list">
