@@ -25,7 +25,9 @@ export default {
       setTimeout(() => {
         this.$Spin.hide();
         // localStorage.removeItem("token");
-        localStorage.clear(); // 全部清空
+        localStorage.removeItem("menuList"); // 全部清空
+        sessionStorage.removeItem("token"); // 全部清空
+        sessionStorage.removeItem("menu"); // 全部清空
         this.$router.push("/");
       }, 2000);
     },

@@ -70,7 +70,7 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           //  this.$router.push 有接口就写入登录接口里面
-          localStorage.setItem("token", JSON.stringify(this.form));
+          sessionStorage.setItem("token", JSON.stringify(this.form));
           this.$router.push({
             path: "/home",
           });

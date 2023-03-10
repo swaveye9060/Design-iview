@@ -142,11 +142,11 @@ export default {
   data() {
     return {
       menu: {
-        openNames: JSON.parse(localStorage.getItem("menu"))
-          ? JSON.parse(localStorage.getItem("menu")).openNames
+        openNames: JSON.parse(sessionStorage.getItem("menu"))
+          ? JSON.parse(sessionStorage.getItem("menu")).openNames
           : [], // ["home&主页"]
-        activeName: JSON.parse(localStorage.getItem("menu"))
-          ? JSON.parse(localStorage.getItem("menu")).activeName
+        activeName: JSON.parse(sessionStorage.getItem("menu"))
+          ? JSON.parse(sessionStorage.getItem("menu")).activeName
           : "", // "home&主页"
       },
       // 菜单数据
@@ -171,7 +171,7 @@ export default {
       this.$emit("on-select-title", headerTitle);
       //
       this.menu.activeName = name;
-      localStorage.setItem("menu", JSON.stringify(this.menu));
+      sessionStorage.setItem("menu", JSON.stringify(this.menu));
     },
 
     handlerOneSubmenu(name) {

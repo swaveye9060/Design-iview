@@ -81,7 +81,7 @@ const router = new VueRouter({
 // GOOD
 router.beforeEach((to, from, next) => {
   // 引入/拿到token (需写在里面)
-  const token = JSON.parse(localStorage.getItem("token")) || '';
+  const token = JSON.parse(sessionStorage.getItem("token")) || '';
   // console.log(token, 333);
   // console.log(to, 333);
   if (to.path !== '/login' && !token) {
