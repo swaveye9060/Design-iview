@@ -43,6 +43,21 @@ const routes = [{
     component: Login
   },
   {
+    path: '/401',
+    name: '401',
+    component: () => import('../components/error-page/401.vue'),
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('../components/error-page/404.vue'),
+  },
+  {
+    path: '/500',
+    name: '500',
+    component: () => import('../components/error-page/500.vue'),
+  },
+  {
     path: '/main',
     name: 'main',
     component: () => import('../components/viewMain/index'),

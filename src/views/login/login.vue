@@ -20,6 +20,7 @@
                 type="password"
                 v-model="form.password"
                 placeholder="请输入密码"
+                @keyup.enter.native="handleSubmit"
               >
                 <span slot="prepend">
                   <Icon :size="14" type="md-lock"></Icon>
@@ -38,12 +39,17 @@
 </template>
 
 <script>
+import menuList from "@/mock/menuData/index";
 export default {
   name: "login",
   components: {},
 
   data() {
     return {
+      // 菜单数据
+      menuList: menuList, // 本地模拟数据
+      menuListApiData: [], // 后台返回数据
+      // 表单
       form: {
         userName: "Design_admin",
         password: "",
@@ -68,8 +74,34 @@ export default {
           this.$router.push({
             path: "/home",
           });
+
+          // 菜单
+          this.getMenuList();
         }
       });
+    },
+
+    // 获取菜单
+    getMenuList() {
+      // 通过接口获取菜单数据
+      this.menuListApiData = $mockMenuList
+        ? this.menuList
+        : this.menuListApiData;
+
+      // console.log($mockMenuList, this.menuListApiData, 333);
+      localStorage.setItem("menuList", JSON.stringify(this.menuListApiData));
+      if (this.menuListApiData && this.menuListApiData.length < 1) {
+        console.error("菜单数据返回出错! 或者使用本地菜单~");
+        localStorage.clear();
+        this.$router.push({
+          path: "/",
+        });
+
+        this.$Modal.error({
+          title: "错误",
+          content: "菜单数据返回出错! 请排查~",
+        });
+      }
     },
   },
 };

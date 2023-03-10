@@ -1,6 +1,7 @@
 <template>
   <section class="side-menu">
     <slot></slot>
+    <!-- 展开 -->
     <Menu
       ref="menu"
       v-show="!collapsed"
@@ -12,7 +13,6 @@
       @on-select="handleSelect"
       @on-open-change="handleOpenChang"
     >
-      <!-- 展开 -->
       <template v-for="item in menuList">
         <Submenu
           v-if="item.children && item.children.length > 0"
@@ -39,6 +39,7 @@
                 :name="`${item3.name}&${item3.title}`"
                 :to="item3.path"
               >
+                <Icon :type="item3.icon"></Icon>
                 {{ item3.title }}
               </MenuItem>
             </Submenu>
@@ -48,6 +49,7 @@
               :name="`${item2.name}&${item2.title}`"
               :to="item2.path"
             >
+              <Icon :type="item2.icon"></Icon>
               {{ item2.title }}
             </MenuItem>
           </template>
@@ -59,22 +61,16 @@
           class="xxx"
         >
           <template slot="title">
-            <router-link class="yyy" @click="xxx" :to="item.path">
+            <router-link
+              class="yyy"
+              @click.native="handlerOneSubmenu(`${item.name}&${item.title}`)"
+              :to="item.path"
+            >
               <Icon :type="item.icon"></Icon>
               {{ item.title }}
             </router-link>
           </template>
-          <MenuItem :name="`${item.name}&${item.title}`"></MenuItem>
         </Submenu>
-        <!-- <MenuItem
-          v-else
-          :name="`${item.name}&${item.title}`"
-          :key="`menu-${item.name}`"
-          :to="item.path"
-        >
-          <Icon :type="item.icon"></Icon>
-          <span>{{ item.title }}</span>
-        </MenuItem> -->
       </template>
     </Menu>
     <!-- 收起 -->
@@ -137,8 +133,6 @@
 </template>
 
 <script>
-import menuList from "@/mock/menuData/index";
-
 export default {
   props: {
     collapsed: {
@@ -150,31 +144,29 @@ export default {
       menu: {
         openNames: JSON.parse(localStorage.getItem("menu"))
           ? JSON.parse(localStorage.getItem("menu")).openNames
-          : ["home&主页"],
+          : [], // ["home&主页"]
         activeName: JSON.parse(localStorage.getItem("menu"))
           ? JSON.parse(localStorage.getItem("menu")).activeName
-          : "home&主页",
+          : "", // "home&主页"
       },
       // 菜单数据
-      menuList: menuList,
+      menuList: JSON.parse(localStorage.getItem("menuList"))
+        ? JSON.parse(localStorage.getItem("menuList"))
+        : [], // 菜单数据
     };
-  },
-
-  created() {
-    if (this.menu.activeName === "home&主页")
-      this.menu.openNames = ["home&主页"];
   },
 
   methods: {
     handleOpenChang(openNames) {
-      console.log(openNames, 111);
+      // console.log(openNames, 111);
       this.menu.openNames = openNames;
     },
 
     handleSelect(name) {
-      console.log(name, 33);
+      // console.log(name, 33);
       if (!name) return;
       // console.log(name, 33);
+      // 获取导航栏title
       let headerTitle = name.split("&")[1];
       this.$emit("on-select-title", headerTitle);
       //
@@ -182,8 +174,9 @@ export default {
       localStorage.setItem("menu", JSON.stringify(this.menu));
     },
 
-    xxx() {
-      console.log(333);
+    handlerOneSubmenu(name) {
+      this.menu.openNames = [];
+      this.handleSelect(name);
     },
   },
 };
@@ -253,14 +246,23 @@ export default {
         .ivu-icon-ios-arrow-down {
           display: none;
         }
-      }
-      &.ivu-menu-opened {
-        a {
+
+        // 单个菜单-高亮
+        a.router-link-active {
           color: @SiderMenu-active-bg;
           background-color: @SiderMenu-bg;
           &:hover {
             color: @SiderMenu-active-bg;
           }
+        }
+      }
+
+      // 首次进入页面'主页菜单'高亮
+      &.ivu-menu-opened .yyy {
+        color: @SiderMenu-active-bg;
+        background-color: @SiderMenu-bg;
+        &:hover {
+          color: @SiderMenu-active-bg;
         }
       }
     }
@@ -289,6 +291,20 @@ export default {
       }
       .ivu-menu-submenu-title:hover {
         background-color: @Sider-bg !important;
+      }
+
+      // 调整子菜单层级样式 - 左对齐
+      .ivu-menu {
+        .ivu-menu-item,
+        .ivu-menu-submenu-title {
+          padding-left: 48px !important;
+        }
+
+        .ivu-menu-submenu {
+          .ivu-menu-item {
+            padding-left: 74px !important;
+          }
+        }
       }
     }
   }

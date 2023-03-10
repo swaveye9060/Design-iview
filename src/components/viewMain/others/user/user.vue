@@ -18,12 +18,14 @@ export default {
       default: "",
     },
   },
+
   methods: {
     handleClick() {
       this.$Spin.show();
       setTimeout(() => {
         this.$Spin.hide();
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
+        localStorage.clear(); // 全部清空
         this.$router.push("/");
       }, 2000);
     },
